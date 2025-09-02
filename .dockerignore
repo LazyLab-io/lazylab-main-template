@@ -32,3 +32,6 @@ pnpm-debug.log*
 
 # AWS Infra
 **/infrastructure
+
+# TypeScript cache
+**/tsconfig.tsbuildinfo
