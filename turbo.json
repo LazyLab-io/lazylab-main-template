@@ -20,7 +20,8 @@
     },
     "start": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["BASE_URL", "BASE_PORT"]
     },
     "db:generate": {
       "cache": false,

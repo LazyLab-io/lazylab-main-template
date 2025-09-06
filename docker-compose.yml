@@ -73,6 +73,43 @@ services:
       - /app/apps/reg-form/src/generated
     networks:
       - app-network
+
+#  web-prod:
+#    build:
+#      context: .
+#      dockerfile: ./apps/web/Dockerfile
+#      target: prod
+#      args:
+#        - APP_NAME=web
+#    command: pnpm --filter web run start
+#    ports:
+#      - "4000:3000"
+#    environment:
+#      - NODE_ENV=production
+#      - REG_FORM_URL=reg-form:3100
+#    networks:
+#      - app-network
+
+  web-dev:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      target: dev
+      args:
+        - APP_NAME=web
+    command: pnpm --filter web run dev
+    ports:
+      - "4300:3000"
+    environment:
+      - NODE_ENV=development
+      - REG_FORM_URL=reg-form:3100
+    volumes:
+      - ./apps/web:/app/apps/web
+      - /app/node_modules
+      - /app/apps/web/node_modules
+      - /app/apps/web/src/generated
+    networks:
+      - app-network
   # Docker shared network definition
 networks:
   app-network:
