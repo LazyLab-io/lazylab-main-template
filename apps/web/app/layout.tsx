@@ -1,49 +1,43 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import React from "react";
-import Link from "next/link";
+import AppSidebar from "@/components/appSidebar";
+import NavBar from "@/components/navBar";
+import { ThemeProvider } from "@/components/providers/themeProvider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
   title: "Lazy form",
   description: "Test REST API",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
         <body>
-          <header className={"bg-amber-600"}>
-            <div className="flex flex-wrap items-start">
-              <h2 className="text-xl font-bold m-5 text-center">
-                <Link href="/">Home</Link>
-              </h2>
-              <h2 className="text-xl font-bold m-5 text-center">
-                <Link href="/users">Users</Link>
-              </h2>
-            </div>
-          </header>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <SidebarProvider defaultOpen={defaultOpen}>
+              <AppSidebar />
+              <main className="w-screen">
+                <NavBar />
+                <div>{children}</div>
+              </main>
+            </SidebarProvider>
           </ThemeProvider>
-          <footer>
-            <div>
-              <Link href={"https://www.lazylab.io"}>
-                <h4>LazyLab.io mbartos - orezek</h4>
-              </Link>
-            </div>
-          </footer>
         </body>
       </html>
     </>

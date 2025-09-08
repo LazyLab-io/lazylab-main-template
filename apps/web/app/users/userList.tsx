@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DeleteUserButton } from "./deleteUserButton";
+import { ViewUserButton } from "./viewUserButton";
 
 import { envs } from "../env-loader";
 
@@ -54,7 +55,7 @@ export async function UserList() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {users.length > 0 ? (
         users.map((user) => (
           <Card key={user.id} className="flex flex-col justify-between">
@@ -68,7 +69,7 @@ export async function UserList() {
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </CardContent>
             <CardFooter className="flex justify-between">
-              {/*<Button>View User</Button>*/}
+              <ViewUserButton userId={user.id} />
               <DeleteUserButton userId={user.id} />
             </CardFooter>
           </Card>
