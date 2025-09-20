@@ -35,3 +35,5 @@ pnpm-debug.log*
 
 # TypeScript cache
 **/tsconfig.tsbuildinfo
+
+**/README.MD
