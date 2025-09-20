@@ -24,7 +24,6 @@
   "dependencies": {
     "@prisma/client": "6.14.0",
     "@repo/env-loader": "workspace:*",
-    "@repo/test-package": "workspace:*",
     "fastify": "^5.4.0",
     "fastify-plugin": "^5.0.1"
   },

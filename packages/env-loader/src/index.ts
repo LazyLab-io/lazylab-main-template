@@ -7,7 +7,10 @@ type Envs = {
 };
 
 export const envs: Envs = cleanEnv(process.env, {
-  NODE_ENV: str({ choices: ["development", "production"] }),
-  PORT: port({ default: 3000 }),
+  NODE_ENV: str({
+    choices: ["development", "production"],
+    default: "production",
+  }),
+  PORT: port({ default: 3600 }),
   DATABASE_URL: url({ default: "localhost:5432" }),
 });

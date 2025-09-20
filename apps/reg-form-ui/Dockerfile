@@ -41,6 +41,7 @@ FROM installer AS builder
 WORKDIR /app
 ARG APP_NAME
 COPY --from=pruner /app/out/full/ .
+#RUN pnpm run db:generate --filter ${APP_NAME}
 RUN pnpm run build --filter ${APP_NAME}
 
 # ==============================================================================
@@ -52,8 +53,8 @@ WORKDIR /app
 ARG APP_NAME
 
 # Create a dedicated, non-root user for security.
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+RUN addgroup --system --gid 1001 nextjs
+RUN adduser --system --uid 1001 nextjs
 
 # Copy package manifests and workspace config from the pruner stage.
 COPY --from=pruner --chown=nodejs:nodejs /app/out/json/ .
@@ -61,15 +62,16 @@ COPY --from=pruner --chown=nodejs:nodejs /app/out/pnpm-lock.yaml .
 COPY --from=pruner --chown=nodejs:nodejs /app/out/pnpm-workspace.yaml .
 # Install ONLY production dependencies.
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts
-# Copy the built application code from the builder stage.
-COPY --from=builder --chown=nodejs:nodejs /app/apps/${APP_NAME}/dist ./apps/${APP_NAME}/dist
+# Copy the built application code from the builder stage and all related packages
+COPY --from=builder --chown=nodejs:nodejs /app/packages ./packages
+COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP_NAME}/.next/standalone/apps/${APP_NAME}/ ./apps/${APP_NAME}/
 # Activate the new user created above
-USER nodejs
+USER nextjs
 ENV NODE_ENV production
 EXPOSE 3000
 # Define the command to start the application.
 WORKDIR /app/apps/${APP_NAME}
-CMD ["node", "./dist/app.js"]
+#CMD ["node", "./server.js"]
 
 # ==============================================================================
 # STAGE 6: dev (Development Image)
@@ -79,6 +81,7 @@ FROM installer AS dev
 WORKDIR /app
 ARG APP_NAME
 COPY --from=pruner /app/out/full/ .
+#RUN pnpm run db:generate --filter ${APP_NAME}
 RUN pnpm run build --filter=${APP_NAME}^...
 # No need to start the process here, better from docker compose file in command key to start dev script
 #CMD ["pnpm", "--filter", "${APP_NAME}", "run", "start"]
