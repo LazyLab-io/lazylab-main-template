@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*", // Catches all requests to /api/...
-        destination: "http://localhost:3600/v1/:path*", // And forwards them to your backend
+        source: "/api/:path*",
+        destination: "http://10.10.3.239:3000/v1/:path*",
       },
     ];
   },
@@ -16,4 +16,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 
 // Local destination when running directly on the client
-//"http://localhost:3600/v1/:path*"
+//"http://localhost:3600/v1/:path*" - when running on the host
+// destination: "http://lazy-forms-reg-form-1:3100/v1/:path*" - when running as container
+//"temp aws IP address: 10.10.3.239
+// AWS: "http://10.10.3.239:3000/v1/:path*" - when running in AWS cloud
