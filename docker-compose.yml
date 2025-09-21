@@ -81,7 +81,7 @@ services:
       target: prod
       args:
         - APP_NAME=reg-form-ui
-    command: node ./server.js
+    command: node server.js
     ports:
       - "3000:3000"
     environment:

@@ -51,7 +51,7 @@ RUN pnpm run build --filter ${APP_NAME}
 FROM base AS prod
 WORKDIR /app
 ARG APP_NAME
-
+RUN apk update && apk add curl
 # Create a dedicated, non-root user for security.
 RUN addgroup --system --gid 1001 nextjs
 RUN adduser --system --uid 1001 nextjs
@@ -65,13 +65,15 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 # Copy the built application code from the builder stage and all related packages
 COPY --from=builder --chown=nodejs:nodejs /app/packages ./packages
 COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP_NAME}/.next/standalone/apps/${APP_NAME}/ ./apps/${APP_NAME}/
+COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP_NAME}/.next/static ./apps/${APP_NAME}/.next/static
+COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP_NAME}/public ./apps/${APP_NAME}/
 # Activate the new user created above
 USER nextjs
 ENV NODE_ENV production
 EXPOSE 3000
 # Define the command to start the application.
 WORKDIR /app/apps/${APP_NAME}
-#CMD ["node", "./server.js"]
+CMD ["node", "./server.js"]
 
 # ==============================================================================
 # STAGE 6: dev (Development Image)
