@@ -1,8 +1,5 @@
 
 
----
-
-````markdown
 # LazyLab Main Template
 
 **Testing ground for building end-to-end APIs and applications on AWS and Next.js**  
